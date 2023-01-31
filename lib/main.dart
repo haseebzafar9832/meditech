@@ -1,5 +1,4 @@
 import 'package:e_commerce_flutter/core/app_theme.dart';
-import 'package:e_commerce_flutter/src/model/productItem.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Routes.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:flutter/material.dart';

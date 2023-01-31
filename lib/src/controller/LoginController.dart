@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:e_commerce_flutter/src/controller/ProfileController.dart';
 import 'package:e_commerce_flutter/src/controller/product_controller.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +8,6 @@ import 'package:http/http.dart' as http;
 
 class LoginController extends GetxController {
   ProductController controller = Get.put(ProductController());
-  ProfileController controller2 = Get.put(ProfileController());
   TextEditingController userNameC = TextEditingController();
   TextEditingController passwordC = TextEditingController();
   RxBool isLoading = false.obs;
@@ -28,7 +26,7 @@ class LoginController extends GetxController {
       MyPrefferenc.savetoken(decodeResponse['token']);
       MyPrefferenc.saveId(decodeResponse['user']['id']);
 
-      controller2.profileData();
+      controller.profileData();
       userNameC.clear();
       passwordC.clear();
       Get.offAllNamed('/splash', arguments: [controller]);

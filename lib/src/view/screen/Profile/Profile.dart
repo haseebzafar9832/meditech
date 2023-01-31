@@ -1,5 +1,4 @@
 import 'package:e_commerce_flutter/core/app_color.dart';
-import 'package:e_commerce_flutter/src/controller/ProfileController.dart';
 import 'package:e_commerce_flutter/src/controller/product_controller.dart';
 import 'package:e_commerce_flutter/src/view/screen/Profile/EditProfile.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
@@ -7,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Profile extends StatelessWidget {
-  var controller = Get.put(ProfileController());
-  var controller2 = Get.put(ProductController());
+  var controller = Get.put(ProductController());
   @override
   Widget build(BuildContext context) {
     controller.profileData();
@@ -17,7 +15,7 @@ class Profile extends StatelessWidget {
       child: SafeArea(
         child: controller.jsonData != null
             ? Obx(() => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 20),
                     Align(
@@ -28,7 +26,7 @@ class Profile extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.amber,
                           borderRadius: BorderRadius.circular(100),
-                          image: DecorationImage(
+                          image: const DecorationImage(
                             fit: BoxFit.fill,
                             image: AssetImage("assets/images/2.jpg"),
                           ),
@@ -40,7 +38,7 @@ class Profile extends StatelessWidget {
                       onTap: () {
                         Get.to(EditProfile());
                       },
-                      child: Align(
+                      child: const Align(
                         alignment: Alignment.center,
                         child: Text(
                           "Edit Profile",
@@ -160,9 +158,9 @@ class Profile extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {
                           MyPrefferenc.clear();
-                          controller2.getBookingTypes();
+                          controller.getBookingTypes();
                           controller.profileData();
-                          controller2.currentBottomNavItemIndex.value = 0;
+                          controller.currentBottomNavItemIndex.value = 0;
                           Get.toNamed('/splash');
                         },
                         child: Text("Log Out"),

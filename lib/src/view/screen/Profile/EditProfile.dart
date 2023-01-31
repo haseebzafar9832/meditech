@@ -2,15 +2,14 @@ import 'dart:io';
 
 import 'package:e_commerce_flutter/core/EmailValidation.dart';
 import 'package:e_commerce_flutter/core/app_color.dart';
-import 'package:e_commerce_flutter/src/controller/ProfileController.dart';
-import 'package:e_commerce_flutter/src/view/screen/Profile/Profile.dart';
+import 'package:e_commerce_flutter/src/controller/product_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Signup/components/TextField.dart';
 
 class EditProfile extends StatelessWidget {
-  var controller = Get.put(ProfileController());
+  var controller = Get.put(ProductController());
   var formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {

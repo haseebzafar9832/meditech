@@ -2,16 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:e_commerce_flutter/src/model/productItem.dart';
+import 'package:e_commerce_flutter/src/model/profileModeld.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Routes.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:e_commerce_flutter/src/view/screen/all_product_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_commerce_flutter/core/extensions.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../model/numerical.dart';
 import '../model/product.dart';
@@ -25,6 +28,7 @@ class ProductController extends GetxController {
 
   RxList<Results> searchData = <Results>[].obs;
   RxList<Results> cartProducts = <Results>[].obs;
+  // RxList<Results> cartData = <Results>[].obs;
   TextEditingController searchC = TextEditingController();
   // RxList<ProductCategory> categories = AppData.categories.obs;
   int length = ProductType.values.length;
@@ -33,19 +37,28 @@ class ProductController extends GetxController {
   RxInt productImageDefaultIndex = 0.obs;
   @override
   void onInit() {
-    getBookingTypes();
     print("init state chal rhi h");
     super.onInit();
+    profileData();
+    getBookingTypes();
+    fetchData();
+  }
+
+  fetchData() {
+    MyPrefferenc.getCart().then((value) {
+      print("asaaaaaaaaaaaaaaaaaaaaaaa$value");
+
+      // cartData.addAll(value);
+      // print("asaaaaaaaaaaaaaaaaaaaaaaa$cartData");
+    });
   }
 
   RxString dropDownValue = "Sort".obs;
   List<String> dropdownList = ['Sort', 'A-Z', 'Price', 'Latest', 'Old'].obs;
   Future<void> getBookingTypes() async {
-    print("second time      m");
     var data = MyPrefferenc.gettoken();
 
     try {
-      print("second time${data}");
       var url = Uri.parse(
           'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/items/');
 
@@ -55,10 +68,7 @@ class ProductController extends GetxController {
                   'Authorization': 'token $data',
                 }
               : null);
-      print("object");
-      print(response.statusCode);
       if (response.statusCode == 200) {
-        print("ander agia h");
         var json = jsonDecode(response.body);
         filteredProducts.value =
             List<Results>.from(json['results'].map((d) => Results.fromJson(d)))
@@ -105,6 +115,41 @@ class ProductController extends GetxController {
         body: bodyParam,
       );
 
+      if (response.statusCode == 200) {
+        Future.delayed(Duration(seconds: 2), () {
+          isLoading.value = false;
+        });
+      } else {
+        isLoading.value = false;
+        Get.snackbar("User", "Please Login First");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Order(double totalPrice, int addressId, int totalQuantity, List items) async {
+    try {
+      isLoading.value = true;
+      var data = MyPrefferenc.gettoken();
+
+      var bodyParam = {
+        "total_amount": totalPrice,
+        "address_id": addressId,
+        "total_quantity": totalQuantity,
+        "items": [],
+      };
+
+      var url = Uri.parse(
+          'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/order/place_order/');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'token $data',
+        },
+        body: bodyParam,
+      );
+      print(response.statusCode);
       if (response.statusCode == 200) {
         Future.delayed(Duration(seconds: 2), () {
           isLoading.value = false;
@@ -294,5 +339,101 @@ class ProductController extends GetxController {
       }
     }
     return currentSize;
+  }
+
+  // profile controller
+  File? imgurl;
+  Future pickImageCamera() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      imgurl = imageTemp;
+      print(imgurl);
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
+  TextEditingController nameC = TextEditingController();
+  TextEditingController address1C = TextEditingController();
+  TextEditingController address2C = TextEditingController();
+  TextEditingController address3C = TextEditingController();
+  TextEditingController address4C = TextEditingController();
+  TextEditingController emailC = TextEditingController();
+  TextEditingController phoneC = TextEditingController();
+  TextEditingController address = TextEditingController();
+  RxList<User> profileDetail = <User>[].obs;
+
+  RxMap<String, dynamic>? jsonData = <String, dynamic>{}.obs;
+
+  Future profileData() async {
+    var data = MyPrefferenc.gettoken();
+    var id = MyPrefferenc.getId();
+    print("ye chlali k nh");
+
+    try {
+      var url = Uri.parse(
+          'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/user/$id/');
+      final response = await http.get(url, headers: {
+        'Authorization': 'token $data',
+      });
+      if (response.statusCode == 200) {
+        jsonData!.value = jsonDecode(response.body);
+        print(jsonData);
+      } else if (response.statusCode == 401) {
+        jsonData = null;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future editProfileData() async {
+    var data = MyPrefferenc.gettoken();
+    var id = MyPrefferenc.getId();
+    print(id);
+    var bodyParam = {
+      "phone_number": phoneC.text,
+      "email_address": emailC.text,
+      "address": address.text,
+    };
+    var url = Uri.parse(
+        'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/user/add_address/');
+    final response = await http.post(url,
+        headers: {
+          'Authorization': 'token $data',
+        },
+        body: bodyParam);
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+
+      print(data);
+    } else {
+      print("Edit Failded");
+    }
+  }
+
+  Future deleteAddress(int adressId) async {
+    var data = MyPrefferenc.gettoken();
+
+    var bodyParam = {
+      "address_id": adressId.toString(),
+    };
+    var url = Uri.parse(
+        'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/user/remove_address/');
+    final response = await http.post(url,
+        headers: {
+          'Authorization': 'Token $data',
+        },
+        body: bodyParam);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      // print(data);
+    } else {
+      print("Edit Failded");
+    }
   }
 }

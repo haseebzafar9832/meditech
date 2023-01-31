@@ -47,7 +47,10 @@ class MyPrefferenc {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString('data');
     if (data != null) {
+      print("decoded data 2$data");
+
       final decodedData = jsonDecode(data);
+      print("decoded data$decodedData");
       return decodedData;
     }
     return [];

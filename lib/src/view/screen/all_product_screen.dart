@@ -1,5 +1,4 @@
 import 'package:e_commerce_flutter/core/app_color.dart';
-import 'package:e_commerce_flutter/src/controller/ProfileController.dart';
 import 'package:e_commerce_flutter/src/view/screen/Signup/components/TextField.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 

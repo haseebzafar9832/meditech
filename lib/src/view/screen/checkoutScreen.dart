@@ -9,10 +9,17 @@ import '../../controller/product_controller.dart';
 import '../../model/product.dart';
 import '../widget/empty_cart.dart';
 
-final ProductController controller = Get.put(ProductController());
-
 class CheckOutScreen extends StatelessWidget {
-  const CheckOutScreen({Key? key}) : super(key: key);
+  double total_amount;
+  int addresId;
+  List item;
+  CheckOutScreen({
+    required this.addresId,
+    required this.total_amount,
+    required this.item,
+  });
+
+  final ProductController controller = Get.put(ProductController());
 
   PreferredSizeWidget _appBar(BuildContext context) {
     return AppBar(
@@ -220,7 +227,11 @@ class CheckOutScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
           child: ElevatedButton(
             child: const Text("Buy Now"),
-            onPressed: controller.isEmptyCart ? null : () {},
+            onPressed: controller.isEmptyCart
+                ? null
+                : () {
+                    controller.Order(total_amount, 2, 3, item);
+                  },
           ),
         ),
       ),
