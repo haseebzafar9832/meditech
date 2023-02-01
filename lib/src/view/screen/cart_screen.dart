@@ -1,5 +1,6 @@
 import 'package:e_commerce_flutter/core/extensions.dart';
 import 'package:e_commerce_flutter/src/model/productItem.dart';
+import 'package:e_commerce_flutter/src/view/screen/Address.dart';
 import 'package:e_commerce_flutter/src/view/screen/Profile/EditProfile.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:e_commerce_flutter/src/view/screen/checkoutScreen.dart';
@@ -206,13 +207,23 @@ class CartScreen extends StatelessWidget {
                   onPressed: controller.isEmptyCart
                       ? null
                       : () {
-                          Get.to(
-                            CheckOutScreen(
-                              addresId: 2,
-                              total_amount: controller.totalPrice.value,
-                              item: controller.cartProducts,
-                            ),
-                          );
+                          List<Map<String, dynamic>> checkOut = [];
+
+                          for (var i = 0;
+                              i < controller.cartProducts.length;
+                              i++) {
+                            checkOut.add({
+                              "item_id": controller.cartProducts[i].id,
+                              "qunatity": controller.cartProducts[i].quantity,
+                              "amount": controller.totalPrice.value,
+                            });
+                          }
+                          Get.to(Address(
+                            addresId: 2,
+                            total_amount: controller.totalPrice.value,
+                            item: checkOut,
+                          ));
+                          print(checkOut);
                         },
                 ),
               ),

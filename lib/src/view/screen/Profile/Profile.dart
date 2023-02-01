@@ -1,5 +1,6 @@
 import 'package:e_commerce_flutter/core/app_color.dart';
 import 'package:e_commerce_flutter/src/controller/product_controller.dart';
+import 'package:e_commerce_flutter/src/view/screen/OrderDetail/OrderDetail.dart';
 import 'package:e_commerce_flutter/src/view/screen/Profile/EditProfile.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,6 @@ class Profile extends StatelessWidget {
   var controller = Get.put(ProductController());
   @override
   Widget build(BuildContext context) {
-    controller.profileData();
-    print(controller.jsonData);
     return SingleChildScrollView(
       child: SafeArea(
         child: controller.jsonData != null
@@ -86,6 +85,16 @@ class Profile extends StatelessWidget {
                           userDetailWidget(
                             title: "Phone Number",
                             text: "${controller.jsonData!['phone_number']}",
+                          ),
+                          SizedBox(height: 15),
+                          InkWell(
+                            onTap: () {
+                              Get.to(OrderDetailPAge());
+                            },
+                            child: userDetailWidget(
+                              title: "Orders Detail",
+                              text: "",
+                            ),
                           ),
                         ],
                       ),

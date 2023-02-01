@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:convert';
 
 import 'package:e_commerce_flutter/core/extensions.dart';
 import 'package:e_commerce_flutter/src/model/productItem.dart';
@@ -12,7 +12,7 @@ import '../widget/empty_cart.dart';
 class CheckOutScreen extends StatelessWidget {
   double total_amount;
   int addresId;
-  List item;
+  List<Map<String, dynamic>> item;
   CheckOutScreen({
     required this.addresId,
     required this.total_amount,
@@ -20,7 +20,6 @@ class CheckOutScreen extends StatelessWidget {
   });
 
   final ProductController controller = Get.put(ProductController());
-
   PreferredSizeWidget _appBar(BuildContext context) {
     return AppBar(
       title: Text(
@@ -230,7 +229,14 @@ class CheckOutScreen extends StatelessWidget {
             onPressed: controller.isEmptyCart
                 ? null
                 : () {
-                    controller.Order(total_amount, 2, 3, item);
+                    Map<String, dynamic> response = {
+                      "total_amount": total_amount,
+                      "address_id": addresId,
+                      "total_quantity": 3,
+                      "itmes": item,
+                    };
+
+                    controller.Order(json.encode(response));
                   },
           ),
         ),

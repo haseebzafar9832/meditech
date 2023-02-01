@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_commerce_flutter/src/model/OrderMode.dart';
 import 'package:e_commerce_flutter/src/model/productItem.dart';
 import 'package:e_commerce_flutter/src/model/profileModeld.dart';
+import 'package:e_commerce_flutter/src/view/screen/OrderDetail/OrderDetail.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Routes.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:e_commerce_flutter/src/view/screen/all_product_screen.dart';
@@ -12,8 +14,6 @@ import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:e_commerce_flutter/core/extensions.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../model/numerical.dart';
@@ -25,23 +25,28 @@ class ProductController extends GetxController {
   // RxList<Results> allProducts = AppData.products.obs;
   RxList<Results> filteredProducts = <Results>[].obs;
   RxList<Results> favouriteList = <Results>[].obs;
+  // RxList allORder = [].obs;
 
   RxList<Results> searchData = <Results>[].obs;
   RxList<Results> cartProducts = <Results>[].obs;
-  // RxList<Results> cartData = <Results>[].obs;
+  RxList allORderList = [].obs;
   TextEditingController searchC = TextEditingController();
   // RxList<ProductCategory> categories = AppData.categories.obs;
   int length = ProductType.values.length;
   RxDouble totalPrice = 0.0.obs;
   RxInt currentBottomNavItemIndex = 0.obs;
   RxInt productImageDefaultIndex = 0.obs;
+  OrdersDetial ordersDetial = OrdersDetial();
+  Item items = Item();
   @override
-  void onInit() {
+  void onInit() async {
     print("init state chal rhi h");
     super.onInit();
     profileData();
     getBookingTypes();
     fetchData();
+    profileData();
+    ordersDetial = await allOrder();
   }
 
   fetchData() {
@@ -128,20 +133,15 @@ class ProductController extends GetxController {
     }
   }
 
-  Order(double totalPrice, int addressId, int totalQuantity, List items) async {
+  Order(String items) async {
     try {
       isLoading.value = true;
       var data = MyPrefferenc.gettoken();
 
-      var bodyParam = {
-        "total_amount": totalPrice,
-        "address_id": addressId,
-        "total_quantity": totalQuantity,
-        "items": [],
-      };
+      var bodyParam = items;
 
       var url = Uri.parse(
-          'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/order/place_order/');
+          'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/orders/place_order/');
       final response = await http.post(
         url,
         headers: {
@@ -149,7 +149,7 @@ class ProductController extends GetxController {
         },
         body: bodyParam,
       );
-      print(response.statusCode);
+      print("order api status${response.statusCode}");
       if (response.statusCode == 200) {
         Future.delayed(Duration(seconds: 2), () {
           isLoading.value = false;
@@ -163,25 +163,24 @@ class ProductController extends GetxController {
     }
   }
 
-  // void filterItemsByCategory(int index) {
-  //   for (ProductCategory element in categories) {
-  //     element.isSelected = false;
-  //   }
-  //   categories[index].isSelected = true;
+  allOrder() async {
+    try {
+      var data = MyPrefferenc.gettoken();
+      var id = MyPrefferenc.getId();
+      print("user id$id");
+      var url = Uri.parse(
+          'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/orders/$id/');
 
-  //   if (categories[index].type == ProductType.all) {
-  //     filteredProducts.assignAll(allProducts);
-  //   } else {
-  //     filteredProducts.assignAll(allProducts.where((item) {
-  //       return item.type == categories[index].type;
-  //     }).toList());
-  //   }
-  // }
-
-  // void isLiked(int index) {
-  //   filteredProducts[index].isLiked = !filteredProducts[index].isLiked;
-  //   filteredProducts.refresh();
-  // }
+      final response = await http.get(url, headers: {
+        'Authorization': 'token $data',
+      });
+      if (response.statusCode == 200) {
+        return ordersDetialFromJson(response.body);
+      } else if (response.statusCode == 400) {}
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void addToCart(Results product) {
     product.quantity = product.quantity! + 1;
@@ -431,6 +430,7 @@ class ProductController extends GetxController {
     print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+
       // print(data);
     } else {
       print("Edit Failded");
