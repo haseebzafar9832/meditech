@@ -215,7 +215,7 @@ class CartScreen extends StatelessWidget {
                             checkOut.add({
                               "item_id": controller.cartProducts[i].id,
                               "qunatity": controller.cartProducts[i].quantity,
-                              "amount": controller.totalPrice.value,
+                              "amount": controller.totalPrice.value.toString(),
                             });
                           }
                           Get.to(Address(

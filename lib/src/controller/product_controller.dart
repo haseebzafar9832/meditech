@@ -46,7 +46,12 @@ class ProductController extends GetxController {
     getBookingTypes();
     fetchData();
     profileData();
-    ordersDetial = await allOrder();
+    print("asssssskldjfljdsljflsdlflkjdslkfj${await allOrder()}");
+    if (ordersDetial != null) {
+      return ordersDetial = await allOrder();
+    } else {
+      Text("LoginFire");
+    }
   }
 
   fetchData() {
@@ -134,32 +139,27 @@ class ProductController extends GetxController {
   }
 
   Order(String items) async {
-    try {
-      isLoading.value = true;
-      var data = MyPrefferenc.gettoken();
-
-      var bodyParam = items;
-
-      var url = Uri.parse(
-          'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/orders/place_order/');
-      final response = await http.post(
-        url,
-        headers: {
-          'Authorization': 'token $data',
-        },
-        body: bodyParam,
-      );
-      print("order api status${response.statusCode}");
-      if (response.statusCode == 200) {
-        Future.delayed(Duration(seconds: 2), () {
-          isLoading.value = false;
-        });
-      } else {
+    isLoading.value = true;
+    var data = MyPrefferenc.gettoken();
+    var bodyParam = items;
+    print(bodyParam);
+    var url = Uri.parse(
+        'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/orders/place_order/');
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'token $data',
+      },
+      body: bodyParam,
+    );
+    print("order api status${response.statusCode}");
+    if (response.statusCode == 200) {
+      Future.delayed(const Duration(seconds: 2), () {
         isLoading.value = false;
-        Get.snackbar("User", "Please Login First");
-      }
-    } catch (e) {
-      print(e);
+      });
+    } else {
+      isLoading.value = false;
+      Get.snackbar("User", "Please Login First");
     }
   }
 
@@ -174,6 +174,8 @@ class ProductController extends GetxController {
       final response = await http.get(url, headers: {
         'Authorization': 'token $data',
       });
+      print("asssssskldjfljdsljflsdlflkjdslkfj${response.body}");
+
       if (response.statusCode == 200) {
         return ordersDetialFromJson(response.body);
       } else if (response.statusCode == 400) {}

@@ -229,14 +229,16 @@ class CheckOutScreen extends StatelessWidget {
             onPressed: controller.isEmptyCart
                 ? null
                 : () {
-                    Map<String, dynamic> response = {
-                      "total_amount": total_amount,
-                      "address_id": addresId,
-                      "total_quantity": 3,
+                    print(item);
+                    var response = {
+                      "total_amount": total_amount.toString(),
+                      "address_id": addresId.toString(),
+                      "total_quantity": 3.toString(),
                       "itmes": item,
                     };
-
-                    controller.Order(json.encode(response));
+                    controller.Order(
+                      jsonEncode(response),
+                    );
                   },
           ),
         ),
