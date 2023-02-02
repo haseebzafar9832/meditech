@@ -229,12 +229,11 @@ class CheckOutScreen extends StatelessWidget {
             onPressed: controller.isEmptyCart
                 ? null
                 : () {
-                    print(item);
                     var response = {
                       "total_amount": total_amount.toString(),
                       "address_id": addresId.toString(),
-                      "total_quantity": 3.toString(),
-                      "itmes": item,
+                      "total_quantity": 3,
+                      "items": item,
                     };
                     controller.Order(
                       jsonEncode(response),
