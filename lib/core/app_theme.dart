@@ -1,3 +1,4 @@
+import 'package:e_commerce_flutter/core/app_color.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -7,14 +8,14 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(12),
-          backgroundColor: const Color(0xFFf16b26),
+          backgroundColor: Colors.green,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12), // <-- Radius
           ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(foregroundColor: Colors.deepOrange)),
+          style: TextButton.styleFrom(foregroundColor: Colors.green)),
       iconTheme: const IconThemeData(color: Color(0xFFA6A3A0)),
       textTheme: const TextTheme(
           headline1: TextStyle(

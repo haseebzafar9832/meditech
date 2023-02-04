@@ -43,6 +43,7 @@ class Results {
   String? createdAt;
   String? updatedAt;
   bool? is_favourite;
+  String? category;
   Results({
     this.id,
     this.quantity = 0,
@@ -56,6 +57,7 @@ class Results {
     this.createdAt,
     this.updatedAt,
     this.is_favourite,
+    this.category,
   });
 
   Results.fromJson(Map<String, dynamic> json) {
@@ -76,6 +78,7 @@ class Results {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     is_favourite = json['is_favourite'];
+    category = json['category'];
   }
 
   Map<String, dynamic> toJson() {
@@ -92,6 +95,7 @@ class Results {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['is_favourite'] = this.is_favourite;
+    data['category'] = this.category;
     return data;
   }
 }

@@ -127,6 +127,15 @@ class AllProductScreen extends StatelessWidget {
                                         (a, b) => a.price!.compareTo(b.price!));
                                   }
                                 } else if (controller.dropDownValue.value ==
+                                    "Machines") {
+                                  print("object");
+                                  // for (var i = 0;
+                                  //     i < controller.filteredProducts.length;
+                                  //     i++) {
+                                  //   controller.filteredProducts.sort(
+                                  //       (a, b) => a.price!.compareTo(b.price!));
+                                  // }
+                                } else if (controller.dropDownValue.value ==
                                     "Latest") {
                                   for (var i = 0;
                                       i < controller.filteredProducts.length;

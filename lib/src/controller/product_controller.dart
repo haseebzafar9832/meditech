@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:e_commerce_flutter/src/model/CategoriesModel.dart';
 import 'package:e_commerce_flutter/src/model/OrderMode.dart';
 import 'package:e_commerce_flutter/src/model/productItem.dart';
 import 'package:e_commerce_flutter/src/model/profileModeld.dart';
@@ -24,6 +25,8 @@ import '../model/product_size_type.dart';
 class ProductController extends GetxController {
   // RxList<Results> allProducts = AppData.products.obs;
   RxList<Results> filteredProducts = <Results>[].obs;
+  RxList<Results> filteredProducts2 = <Results>[].obs;
+  RxInt isCategory = 0.obs;
   RxList<Results> favouriteList = <Results>[].obs;
   // RxList allORder = [].obs;
 
@@ -37,6 +40,7 @@ class ProductController extends GetxController {
   RxInt currentBottomNavItemIndex = 0.obs;
   RxInt productImageDefaultIndex = 0.obs;
   OrdersDetial ordersDetial = OrdersDetial();
+  Categories categoris = Categories();
   Item items = Item();
   @override
   void onInit() async {
@@ -44,27 +48,51 @@ class ProductController extends GetxController {
     super.onInit();
     profileData();
     getBookingTypes();
-    fetchData();
+    // fetchData();
     profileData();
     print("asssssskldjfljdsljflsdlflkjdslkfj${await allOrder()}");
-    if (ordersDetial != null) {
-      return ordersDetial = await allOrder();
-    } else {
-      Text("LoginFire");
+    ordersDetial = await allOrder();
+
+    categoris = await getSortingLists();
+  }
+
+  // fetchData() {
+  //   MyPrefferenc.getCart().then((value) {
+  //     print("asaaaaaaaaaaaaaaaaaaaaaaa$value");
+
+  //     // cartData.addAll(value);
+  //     // print("asaaaaaaaaaaaaaaaaaaaaaaa$cartData");
+  //   });
+  // }
+
+  RxString dropDownValue = "Sort".obs;
+  List<String> dropdownList = [
+    'Sort',
+    'A-Z',
+    'Price',
+    'Latest',
+    'Old',
+    'Machines',
+  ].obs;
+  getSortingLists() async {
+    var data = MyPrefferenc.gettoken();
+
+    try {
+      var url = Uri.parse(
+          'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/category/');
+
+      final response = await http.get(url, headers: {
+        'Authorization': 'token $data',
+      });
+      if (response.statusCode == 200) {
+        return categoriesFromJson(response.body);
+      } else if (response.statusCode == 400) {}
+      // return [];
+    } catch (e) {
+      print(e);
     }
   }
 
-  fetchData() {
-    MyPrefferenc.getCart().then((value) {
-      print("asaaaaaaaaaaaaaaaaaaaaaaa$value");
-
-      // cartData.addAll(value);
-      // print("asaaaaaaaaaaaaaaaaaaaaaaa$cartData");
-    });
-  }
-
-  RxString dropDownValue = "Sort".obs;
-  List<String> dropdownList = ['Sort', 'A-Z', 'Price', 'Latest', 'Old'].obs;
   Future<void> getBookingTypes() async {
     var data = MyPrefferenc.gettoken();
 
@@ -138,44 +166,42 @@ class ProductController extends GetxController {
     }
   }
 
-  Order(String items) async {
+  order(var items) async {
     isLoading.value = true;
     var data = MyPrefferenc.gettoken();
-    var bodyParam = items;
+    String bodyParam = items;
     print(bodyParam);
     var url = Uri.parse(
         'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/orders/place_order/');
     final response = await http.post(
       url,
       headers: {
-        'Authorization': 'token $data',
+        'Authorization': 'Token $data',
+        'Content-Type': 'application/json',
       },
       body: bodyParam,
     );
     print("order api status${response.statusCode}");
     if (response.statusCode == 200) {
+      var json = ordersDetialFromJson(response.body);
+      MyPrefferenc.orderId(json.id!);
+      print(json.id);
       Future.delayed(const Duration(seconds: 2), () {
         isLoading.value = false;
       });
-    } else {
-      isLoading.value = false;
-      Get.snackbar("User", "Please Login First");
     }
   }
 
   allOrder() async {
     try {
       var data = MyPrefferenc.gettoken();
-      var id = MyPrefferenc.getId();
-      print("user id$id");
+      var id = MyPrefferenc.getOrderId();
       var url = Uri.parse(
           'http://ec2-43-206-254-199.ap-northeast-1.compute.amazonaws.com/api/v1/orders/$id/');
 
       final response = await http.get(url, headers: {
         'Authorization': 'token $data',
       });
-      print("asssssskldjfljdsljflsdlflkjdslkfj${response.body}");
-
       if (response.statusCode == 200) {
         return ordersDetialFromJson(response.body);
       } else if (response.statusCode == 400) {}
@@ -191,7 +217,7 @@ class ProductController extends GetxController {
     var resultsJson = jsonEncode(cartProducts);
     List d = json.decode(resultsJson);
     print(d);
-    MyPrefferenc.saveCart(resultsJson);
+    // MyPrefferenc.saveCart(resultsJson);
 
     calculateTotalPrice();
   }

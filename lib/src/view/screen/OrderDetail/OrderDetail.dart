@@ -20,7 +20,10 @@ class OrderDetailPAge extends StatelessWidget {
                 itemBuilder: (BuildContext context, int i) {
                   var data = controller.ordersDetial.orderItems![i];
                   return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text("Order Status: ${controller.ordersDetial.status}"),
                       Text("Order Id: ${controller.ordersDetial.id}"),
                       Text(
                           "Order Number: ${controller.ordersDetial.orderNumber}"),

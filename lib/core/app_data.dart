@@ -1,3 +1,4 @@
+import 'package:e_commerce_flutter/core/app_color.dart';
 import 'package:e_commerce_flutter/src/model/bottom_navy_bar_item.dart';
 import 'package:e_commerce_flutter/src/model/product.dart';
 import 'package:e_commerce_flutter/src/model/product_category.dart';
@@ -182,13 +183,13 @@ class AppData {
 
   static List<BottomNavyBarItem> bottomNavyBarItems = [
     BottomNavyBarItem(
-        "Home", const Icon(Icons.home), const Color(0xFFEC6813), Colors.grey),
+        "Home", const Icon(Icons.home), AppColor.darkOrange, Colors.grey),
     BottomNavyBarItem("Favorite", const Icon(Icons.favorite),
-        const Color(0xFFEC6813), Colors.grey),
+        AppColor.darkOrange, Colors.grey),
     BottomNavyBarItem("Cart", const Icon(Icons.shopping_cart),
-        const Color(0xFFEC6813), Colors.grey),
-    BottomNavyBarItem("Profile", const Icon(Icons.person),
-        const Color(0xFFEC6813), Colors.grey),
+        AppColor.darkOrange, Colors.grey),
+    BottomNavyBarItem(
+        "Profile", const Icon(Icons.person), AppColor.darkOrange, Colors.grey),
   ];
 
   static List<RecommendedProduct> recommendedProducts = [

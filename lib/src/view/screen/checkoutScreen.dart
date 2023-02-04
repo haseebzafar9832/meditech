@@ -218,33 +218,6 @@ class CheckOutScreen extends StatelessWidget {
     );
   }
 
-  Widget bottomBarButton() {
-    return Expanded(
-      child: SizedBox(
-        width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
-          child: ElevatedButton(
-            child: const Text("Buy Now"),
-            onPressed: controller.isEmptyCart
-                ? null
-                : () {
-                    var response = {
-                      "total_amount": total_amount.toString(),
-                      "address_id": addresId.toString(),
-                      "total_quantity": 3,
-                      "items": item,
-                    };
-                    controller.Order(
-                      jsonEncode(response),
-                    );
-                  },
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,7 +230,82 @@ class CheckOutScreen extends StatelessWidget {
             child: !controller.isEmptyCart ? cartListView() : const EmptyCart(),
           ),
           bottomBarTitle(),
-          bottomBarButton()
+          Expanded(
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
+                child: ElevatedButton(
+                  child: const Text("Buy Now"),
+                  onPressed: controller.isEmptyCart
+                      ? null
+                      : () {
+                          showDialog(
+                              context: context,
+                              builder: (ctx) => SimpleDialog(
+                                    title: Text(
+                                      "Select an Address",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    children: [
+                                      Obx(
+                                        () => ListView.builder(
+                                          // physics: NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: controller
+                                              .jsonData!['addresses'].length,
+                                          itemBuilder: (context, index) {
+                                            var addresses = controller
+                                                .jsonData!['addresses'];
+
+                                            return InkWell(
+                                              onTap: () {
+                                                var response = {
+                                                  "total_amount": total_amount,
+                                                  "total_quantity": 1,
+                                                  "address_id": addresses[index]
+                                                      ['id'],
+                                                  "items": item,
+                                                };
+                                                controller.order(
+                                                  jsonEncode(response),
+                                                );
+                                              },
+                                              child: SizedBox(
+                                                height: 30,
+                                                child: Card(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 10),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(addresses![index]
+                                                            ['address']),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ));
+                        },
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

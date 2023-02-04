@@ -38,23 +38,37 @@ class MyPrefferenc {
     return _preferences!.getInt("id") ?? 0;
   }
 
-  static saveCart(data) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('data', jsonEncode(data));
-  }
-
-  static getCart() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString('data');
-    if (data != null) {
-      print("decoded data 2$data");
-
-      final decodedData = jsonDecode(data);
-      print("decoded data$decodedData");
-      return decodedData;
+  static Future orderId(int n) {
+    if (_preferences == null) {
+      throw Exception('SharedPreferences not initialized.');
     }
-    return [];
+    return _preferences!.setInt("order", n);
   }
+
+  static int? getOrderId() {
+    if (_preferences == null) {
+      throw Exception('SharedPreferences not initialized.');
+    }
+    return _preferences!.getInt("order") ?? 0;
+  }
+
+  // static saveCart(data) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   prefs.setString('data', jsonEncode(data));
+  // }
+
+  // static getCart() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final data = prefs.getString('data');
+  //   if (data != null) {
+  //     print("decoded data 2$data");
+
+  //     final decodedData = jsonDecode(data);
+  //     print("decoded data$decodedData");
+  //     return decodedData;
+  //   }
+  //   return [];
+  // }
 
   static clear() async {
     await _preferences!.clear();

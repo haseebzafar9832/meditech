@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
     CartScreen(),
     LoginScreen(),
   ];
-  screenFunction() {}
+  // screenFunction() {}
   var d = MyPrefferenc.gettoken();
   @override
   Widget build(BuildContext context) {

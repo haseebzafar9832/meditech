@@ -1,8 +1,6 @@
+import 'package:e_commerce_flutter/core/app_color.dart';
 import 'package:e_commerce_flutter/core/extensions.dart';
 import 'package:e_commerce_flutter/src/model/productItem.dart';
-import 'package:e_commerce_flutter/src/view/screen/Address.dart';
-import 'package:e_commerce_flutter/src/view/screen/Profile/EditProfile.dart';
-import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:e_commerce_flutter/src/view/screen/checkoutScreen.dart';
 import 'package:e_commerce_flutter/src/view/widget/animated_switcher_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -215,10 +213,10 @@ class CartScreen extends StatelessWidget {
                             checkOut.add({
                               "item_id": controller.cartProducts[i].id,
                               "quantity": controller.cartProducts[i].quantity,
-                              "amount": controller.totalPrice.value,
+                              "amount": controller.totalPrice.value.toString(),
                             });
                           }
-                          Get.to(Address(
+                          Get.to(CheckOutScreen(
                             addresId: 2,
                             total_amount: controller.totalPrice.value,
                             item: checkOut,
@@ -247,7 +245,7 @@ class CartScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w900,
-                          color: Color(0xFFEC6813),
+                          color: AppColor.darkOrange,
                         ),
                       ),
                     );
