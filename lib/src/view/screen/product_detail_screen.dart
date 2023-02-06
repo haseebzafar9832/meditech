@@ -139,6 +139,7 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -218,6 +219,9 @@ class ProductDetailScreen extends StatelessWidget {
                           d!.isEmpty
                               ? Get.toNamed('/login')
                               : controller.addToCart(product[0]);
+                          d.isNotEmpty
+                              ? Get.snackbar("produt", "Product is added")
+                              : SizedBox();
                         },
                       ),
                     ),

@@ -6,6 +6,7 @@ import 'package:e_commerce_flutter/src/model/OrderMode.dart';
 import 'package:e_commerce_flutter/src/model/productItem.dart';
 import 'package:e_commerce_flutter/src/model/profileModeld.dart';
 import 'package:e_commerce_flutter/src/view/screen/OrderDetail/OrderDetail.dart';
+import 'package:e_commerce_flutter/src/view/screen/Success/SuccessPage.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Routes.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:e_commerce_flutter/src/view/screen/all_product_screen.dart';
@@ -45,15 +46,31 @@ class ProductController extends GetxController {
   @override
   void onInit() async {
     print("init state chal rhi h");
-    super.onInit();
     profileData();
     getBookingTypes();
-    // fetchData();
     profileData();
-    print("asssssskldjfljdsljflsdlflkjdslkfj${await allOrder()}");
-    ordersDetial = await allOrder();
+    getData();
+    splash();
+    super.onInit();
 
     categoris = await getSortingLists();
+  }
+
+  Future getData() async {
+    ordersDetial = await allOrder();
+  }
+
+  splash() {
+    Future.delayed(Duration(seconds: 3), () {
+      Get.toNamed('/home');
+    });
+  }
+
+  allData() {
+    profileData();
+    getBookingTypes();
+    profileData();
+    getData();
   }
 
   // fetchData() {
@@ -115,6 +132,7 @@ class ProductController extends GetxController {
         favouriteList.value = filteredProducts
             .where((item) => item.is_favourite == true)
             .toList();
+        print("fav list${favouriteList.length}");
       } else if (response.statusCode == 400) {}
       // return [];
     } catch (e) {
@@ -134,7 +152,7 @@ class ProductController extends GetxController {
   }
 
   RxBool isLoading = false.obs;
-  favItmes(int? pId) async {
+  Future favItmes(int? pId) async {
     try {
       isLoading.value = true;
       var data = MyPrefferenc.gettoken();
@@ -183,6 +201,8 @@ class ProductController extends GetxController {
     );
     print("order api status${response.statusCode}");
     if (response.statusCode == 200) {
+      Get.snackbar("Order", "Order is placed");
+      Get.to(SuccessPage());
       var json = ordersDetialFromJson(response.body);
       MyPrefferenc.orderId(json.id!);
       print(json.id);
@@ -192,7 +212,7 @@ class ProductController extends GetxController {
     }
   }
 
-  allOrder() async {
+  Future allOrder() async {
     try {
       var data = MyPrefferenc.gettoken();
       var id = MyPrefferenc.getOrderId();

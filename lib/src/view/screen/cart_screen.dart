@@ -216,12 +216,69 @@ class CartScreen extends StatelessWidget {
                               "amount": controller.totalPrice.value.toString(),
                             });
                           }
-                          Get.to(CheckOutScreen(
-                            addresId: 2,
-                            total_amount: controller.totalPrice.value,
-                            item: checkOut,
-                          ));
-                          print(checkOut);
+                          showDialog(
+                              context: context,
+                              builder: (ctx) => SimpleDialog(
+                                    title: Text(
+                                      "Select an Address",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    children: [
+                                      Obx(
+                                        () => ListView.builder(
+                                          // physics: NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: controller
+                                              .jsonData!['addresses'].length,
+                                          itemBuilder: (context, index) {
+                                            var addresses = controller
+                                                .jsonData!['addresses'];
+
+                                            return InkWell(
+                                              onTap: () {
+                                                Get.to(
+                                                  CheckOutScreen(
+                                                    addresId: addresses![index]
+                                                        ['id'],
+                                                    total_amount: controller
+                                                        .totalPrice.value,
+                                                    item: checkOut,
+                                                    addres: addresses![index]
+                                                        ['address'],
+                                                  ),
+                                                );
+                                              },
+                                              child: SizedBox(
+                                                height: 30,
+                                                child: Card(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 10),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text("${index + 1} "),
+                                                        Text(addresses![index]
+                                                            ['address']),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ));
                         },
                 ),
               ),

@@ -8,7 +8,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(12),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColor.darkOrange,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12), // <-- Radius
           ),

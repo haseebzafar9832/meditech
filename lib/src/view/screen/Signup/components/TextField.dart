@@ -76,25 +76,25 @@ class LoginTextField extends StatelessWidget {
             : null,
         border: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.black),
-          borderRadius: BorderRadius.circular(06),
+          borderRadius: BorderRadius.circular(12),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.red),
-          borderRadius: BorderRadius.circular(06),
+          borderRadius: BorderRadius.circular(12),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(06.0),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
             color: Colors.black,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),
-          borderRadius: BorderRadius.circular(06.0),
+          borderRadius: BorderRadius.circular(12),
         ),
         errorBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.red),
-          borderRadius: BorderRadius.circular(06.0),
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
       controller: controller,

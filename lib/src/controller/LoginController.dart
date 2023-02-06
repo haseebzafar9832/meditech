@@ -24,6 +24,7 @@ class LoginController extends GetxController {
       var decodeResponse = jsonDecode(response.body);
       // MyPrefferenc.saveId(decodeResponse['user']['id']);
       MyPrefferenc.savetoken(decodeResponse['token']);
+      print("checking${(decodeResponse['token'])}");
       MyPrefferenc.saveId(decodeResponse['user']['id']);
 
       controller.profileData();

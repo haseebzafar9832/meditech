@@ -12,11 +12,13 @@ import '../widget/empty_cart.dart';
 class CheckOutScreen extends StatelessWidget {
   double total_amount;
   int addresId;
+  String addres;
   List<Map<String, dynamic>> item;
   CheckOutScreen({
     required this.addresId,
     required this.total_amount,
     required this.item,
+    required this.addres,
   });
 
   final ProductController controller = Get.put(ProductController());
@@ -229,6 +231,13 @@ class CheckOutScreen extends StatelessWidget {
             flex: 10,
             child: !controller.isEmptyCart ? cartListView() : const EmptyCart(),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              addres,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
           bottomBarTitle(),
           Expanded(
             child: SizedBox(
@@ -236,71 +245,19 @@ class CheckOutScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
                 child: ElevatedButton(
-                  child: const Text("Buy Now"),
+                  child: const Text("Place Order"),
                   onPressed: controller.isEmptyCart
                       ? null
                       : () {
-                          showDialog(
-                              context: context,
-                              builder: (ctx) => SimpleDialog(
-                                    title: Text(
-                                      "Select an Address",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    children: [
-                                      Obx(
-                                        () => ListView.builder(
-                                          // physics: NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemCount: controller
-                                              .jsonData!['addresses'].length,
-                                          itemBuilder: (context, index) {
-                                            var addresses = controller
-                                                .jsonData!['addresses'];
-
-                                            return InkWell(
-                                              onTap: () {
-                                                var response = {
-                                                  "total_amount": total_amount,
-                                                  "total_quantity": 1,
-                                                  "address_id": addresses[index]
-                                                      ['id'],
-                                                  "items": item,
-                                                };
-                                                controller.order(
-                                                  jsonEncode(response),
-                                                );
-                                              },
-                                              child: SizedBox(
-                                                height: 30,
-                                                child: Card(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 10),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(addresses![index]
-                                                            ['address']),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ));
+                          var response = {
+                            "total_amount": total_amount,
+                            "total_quantity": 1,
+                            "address_id": addresId,
+                            "items": item,
+                          };
+                          controller.order(
+                            jsonEncode(response),
+                          );
                         },
                 ),
               ),

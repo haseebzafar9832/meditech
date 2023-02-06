@@ -1,7 +1,9 @@
 import 'package:e_commerce_flutter/core/app_color.dart';
 import 'package:e_commerce_flutter/src/controller/product_controller.dart';
 import 'package:e_commerce_flutter/src/view/screen/OrderDetail/OrderDetail.dart';
+import 'package:e_commerce_flutter/src/view/screen/Profile/Address/Address.dart';
 import 'package:e_commerce_flutter/src/view/screen/Profile/EditProfile.dart';
+import 'package:e_commerce_flutter/src/view/screen/SplashScreen/Splash.dart';
 import 'package:e_commerce_flutter/src/view/screen/Utils/Sharepreference.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,54 +15,76 @@ class Profile extends StatelessWidget {
     return SingleChildScrollView(
       child: SafeArea(
         child: controller.jsonData != null
-            ? Obx(() => Column(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(100),
-                          image: const DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage("assets/images/2.jpg"),
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Obx(
+                  () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(EditProfile());
+                          },
+                          child: Icon(
+                            Icons.edit,
+                            color: AppColor.darkOrange,
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5),
-                    InkWell(
-                      onTap: () {
-                        Get.to(EditProfile());
-                      },
-                      child: const Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Edit Profile",
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w600),
+                      SizedBox(height: 0),
+                      Text(
+                        "My Profile",
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.darkOrange,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      child: Column(
+                      SizedBox(height: 15),
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(height: 15),
-                          Text(
-                            "About You",
-                            style: TextStyle(
-                              color: AppColor.darkOrange,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
+                          Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(100),
+                              image: const DecorationImage(
+                                fit: BoxFit.fill,
+                                image: AssetImage("assets/images/2.jpg"),
+                              ),
                             ),
                           ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${controller.jsonData!['username']}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                "${controller.jsonData!['email']}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: AppColor.darkOrange.withOpacity(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           SizedBox(height: 15),
                           userDetailWidget(
                             title: "First Name",
@@ -87,98 +111,78 @@ class Profile extends StatelessWidget {
                             text: "${controller.jsonData!['phone_number']}",
                           ),
                           SizedBox(height: 15),
-                          InkWell(
-                            onTap: () {
-                              Get.to(OrderDetailPAge());
-                            },
-                            child: userDetailWidget(
-                              title: "Orders Detail",
-                              text: "",
-                            ),
-                          ),
                         ],
                       ),
-                    ),
-                    ExpansionTile(
-                      title: Text(
-                        "Address",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      tilePadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-                      children: [
-                        Obx(
-                          () => ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: controller.jsonData!['addresses'].length,
-                            itemBuilder: (context, index) {
-                              var addresses = controller.jsonData!['addresses'];
-                              print(addresses[index]['phone_number']);
-                              return Dismissible(
-                                onDismissed: (v) {
-                                  print(addresses![index]['id']);
-                                },
-                                key: UniqueKey(),
-                                child: SizedBox(
-                                  height: 80,
-                                  child: Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Row(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                  addresses![index]['address']),
-                                              Text(addresses[index]
-                                                  ['phone_number']),
-                                              Text(addresses[index]
-                                                  ['email_address']),
-                                            ],
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              controller.deleteAddress(
-                                                  MyPrefferenc.getId()!);
-                                            },
-                                            icon: Icon(Icons.delete),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          MyPrefferenc.clear();
-                          controller.getBookingTypes();
-                          controller.profileData();
-                          controller.currentBottomNavItemIndex.value = 0;
-                          Get.toNamed('/splash');
+                      InkWell(
+                        onTap: () {
+                          controller.ordersDetial.id == null
+                              ? Get.snackbar(
+                                  "order", "No order detail aviable yet")
+                              : Get.to(OrderDetailPAge());
                         },
-                        child: Text("Log Out"),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Order Detail",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 14,
+                              color: AppColor.darkOrange,
+                            )
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                ))
+                      SizedBox(height: 15),
+                      InkWell(
+                        onTap: () {
+                          Get.to(Address());
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Address",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 14,
+                              color: AppColor.darkOrange,
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            MyPrefferenc.clear();
+                            // controller.getBookingTypes();
+                            // controller.profileData();
+                            // controller.currentBottomNavItemIndex.value = 0;
+                            Future.delayed(Duration(seconds: 3), () {
+                              Get.offAll(SplashScreen());
+                            });
+                          },
+                          child: Text("Log Out"),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
             : Center(
-                child: Text("No user is logged in"),
+                child: CircularProgressIndicator(),
               ),
       ),
     );
@@ -205,7 +209,8 @@ class userDetailWidget extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
               ),
             ),
           ),
@@ -216,7 +221,10 @@ class userDetailWidget extends StatelessWidget {
             alignment: Alignment.topRight,
             child: Text(
               text,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: AppColor.darkOrange),
             ),
           ),
         ),

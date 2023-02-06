@@ -166,199 +166,210 @@ class AllProductScreen extends StatelessWidget {
           ),
           preferredSize: Size.fromHeight(60)),
       body: SafeArea(
-        child: NestedScrollView(
-          headerSliverBuilder: (context, snapshot) {
-            return [
-              SliverAppBar(
-                expandedHeight: 150,
-                elevation: 0,
-                automaticallyImplyLeading: false,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  background: CarouselSlider.builder(
-                    itemCount: imgList.length,
-                    itemBuilder: (BuildContext context, i, q) {
-                      return Image.asset(
-                        imgList[i],
-                        width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.fill,
-                      );
-                    },
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      aspectRatio: 2.451,
-                      height: 300,
-                      clipBehavior: Clip.none,
-                      viewportFraction: 1,
-                      autoPlayInterval: Duration(seconds: 5),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: NestedScrollView(
+            headerSliverBuilder: (context, snapshot) {
+              return [
+                SliverAppBar(
+                  expandedHeight: 150,
+                  elevation: 0,
+                  automaticallyImplyLeading: false,
+                  pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    background: CarouselSlider.builder(
+                      itemCount: imgList.length,
+                      itemBuilder: (BuildContext context, i, q) {
+                        return Image.asset(
+                          imgList[i],
+                          width: MediaQuery.of(context).size.width,
+                          fit: BoxFit.fill,
+                        );
+                      },
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        aspectRatio: 2.451,
+                        height: 300,
+                        clipBehavior: Clip.none,
+                        viewportFraction: 0.9,
+                        enlargeCenterPage: true,
+                        autoPlayInterval: Duration(seconds: 5),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ];
-          },
-          body: SafeArea(
-            child: Obx(
-              () => controller.isLoading.value == false
-                  ? (controller.filteredProducts.isNotEmpty)
-                      ? Obx(
-                          () => SizedBox(
-                            // height: MediaQuery.of(context).size.height * 0.9,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 10, left: 10, right: 10),
-                              child: GridView.builder(
-                                itemCount: controller.filteredProducts.length,
-                                physics: NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                        childAspectRatio: 9 / 14,
-                                        crossAxisCount: 2,
-                                        mainAxisSpacing: 10,
-                                        crossAxisSpacing: 10),
-                                itemBuilder: (_, index) {
-                                  RxInt selectedIndex = 0.obs;
-                                  Results product =
-                                      controller.filteredProducts[index];
+              ];
+            },
+            body: SafeArea(
+              child: Obx(
+                () => controller.isLoading.value == false
+                    ? (controller.filteredProducts.isNotEmpty)
+                        ? Obx(
+                            () => SizedBox(
+                              // height: MediaQuery.of(context).size.height * 0.9,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 10, left: 10, right: 10),
+                                child: GridView.builder(
+                                  itemCount: controller.filteredProducts.length,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio: 9 / 14,
+                                          crossAxisCount: 2,
+                                          mainAxisSpacing: 10,
+                                          crossAxisSpacing: 10),
+                                  itemBuilder: (_, index) {
+                                    RxInt selectedIndex = 0.obs;
+                                    Results product =
+                                        controller.filteredProducts[index];
 
-                                  return InkWell(
-                                      onTap: () {
-                                        Get.toNamed(
-                                          '/pdetail',
-                                          arguments: [product, product.id],
-                                        );
-                                      },
-                                      child: Obx(
-                                        () => controller.isLoading.value ==
-                                                false
-                                            ? Container(
-                                                color: AppColor.lightOrange,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    left: 10,
-                                                    right: 10,
-                                                    top: 10,
-                                                  ),
-                                                  child: Column(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.22,
-                                                        child: Image.network(
-                                                            product.images![0]
-                                                                .imageUrl!,
-                                                            fit: BoxFit.fill,
-                                                            height:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height,
-                                                            width:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                            scale: 3),
-                                                      ),
-                                                      SizedBox(height: 7),
-                                                      Text(
-                                                        product.title!,
-                                                        style: const TextStyle(
+                                    return InkWell(
+                                        onTap: () {
+                                          Get.toNamed(
+                                            '/pdetail',
+                                            arguments: [product, product.id],
+                                          );
+                                        },
+                                        child: Obx(
+                                          () =>
+                                              controller.isLoading.value ==
+                                                      false
+                                                  ? Container(
+                                                      decoration: BoxDecoration(
                                                           color: AppColor
-                                                              .darkOrange,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                              .lightOrange,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      15)),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                          left: 10,
+                                                          right: 10,
+                                                          top: 10,
                                                         ),
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                      SizedBox(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.05,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
+                                                        child: Column(
                                                           children: [
-                                                            Row(
-                                                              children: [
-                                                                Text(
-                                                                  "Price: ",
-                                                                  style: TextStyle(
-                                                                      color: AppColor
-                                                                          .darkOrange),
-                                                                ),
-                                                                Text(
-                                                                  "${product.price}",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                              ],
+                                                            Container(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.22,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              15),
+                                                                      image:
+                                                                          DecorationImage(
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                        image: NetworkImage(
+                                                                            product.images![0].imageUrl!,
+                                                                            scale: 3),
+                                                                      )),
                                                             ),
-                                                            Obx(
-                                                              () => IconButton(
-                                                                onPressed:
-                                                                    () async {
-                                                                  controller
-                                                                      .favItmes(
-                                                                          product
-                                                                              .id)
-                                                                      .then(
-                                                                          (value) {
-                                                                    controller
-                                                                        .getBookingTypes();
-                                                                  });
-                                                                  print(
-                                                                      "aaaaaaaaaaaaaaaaaa${product.is_favourite}");
-                                                                },
-                                                                icon: Icon(
-                                                                  controller.filteredProducts[index].is_favourite ==
-                                                                          false
-                                                                      ? Icons
-                                                                          .favorite_border
-                                                                      : Icons
-                                                                          .favorite,
-                                                                  color: AppColor
-                                                                      .darkOrange,
-                                                                ),
+                                                            SizedBox(
+                                                                height: 10),
+                                                            Text(
+                                                              product.title!,
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: AppColor
+                                                                    .darkOrange,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                            SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.07,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                        "Price: ",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                AppColor.darkOrange),
+                                                                      ),
+                                                                      Text(
+                                                                        "${product.price}",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  Obx(
+                                                                    () =>
+                                                                        IconButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        controller
+                                                                            .favItmes(product.id)
+                                                                            .then((value) {
+                                                                          controller
+                                                                              .getBookingTypes();
+                                                                        });
+
+                                                                        print(
+                                                                            "aaaaaaaaaaaaaaaaaa${product.is_favourite}");
+                                                                      },
+                                                                      icon:
+                                                                          Icon(
+                                                                        controller.filteredProducts[index].is_favourite ==
+                                                                                false
+                                                                            ? Icons.favorite_border
+                                                                            : Icons.favorite,
+                                                                        color: AppColor
+                                                                            .darkOrange,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
-                                            : Center(
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                      ));
-                                },
+                                                    )
+                                                  : Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                        ));
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                          )
+                        : Center(
+                            child: CircularProgressIndicator(),
+                          )
+                    : Center(
+                        child: CircularProgressIndicator(),
+                      ),
+              ),
             ),
           ),
         ),
